@@ -100,12 +100,33 @@ const CreateTestResult = () => {
     }
   }, [location.state]);
 
-  const handleSubmit = () => {
-    const fullData = {
-      ...basicInfo,
-      ...antibioticInfo,
+  const fullData = {
+    ...basicInfo,
+    ...antibioticInfo,
+  };
+
+  const toPatientRequest = (formData) => {
+    return {
+      name: formData.patientId,
+      ageGroup: ageMap[formData.age],
+      gender: formData.gender,
+      underlyingDiseases: formData.diseases,
+      recentlyHospitalized: formData.hospitalized === "yes",
     };
-    console.log("제출 데이터:", fullData);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const res = await fetch("http://localhost:8080/api/patients", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await res.json();
+      console.log("등록 성공:", result);
+    } catch (err) {
+      console.error("에러:", err.message);
+    }
 
     navigate(`/createNew/test_result`, { state: fullData });
   };
