@@ -4,7 +4,6 @@ package com.example.CureMap.dto.labResult;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 @Getter @Setter
 public class LabResultRequestDto {
 

@@ -1,7 +1,6 @@
 package com.example.CureMap.dto.predictionResult;
 
 import com.example.CureMap.domain.OutcomeSimulation;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter

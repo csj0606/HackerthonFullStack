@@ -3,7 +3,6 @@ package com.example.CureMap.dto.patient;
 import com.example.CureMap.domain.UnderlyingDisease;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Getter

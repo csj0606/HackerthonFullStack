@@ -3,7 +3,6 @@ import com.example.CureMap.domain.LabResult;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
 
 @Getter
 public class LabResultResponseDto {
