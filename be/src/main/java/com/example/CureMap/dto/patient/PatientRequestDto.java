@@ -14,4 +14,6 @@ public class PatientRequestDto {
     private List<UnderlyingDisease> underlyingDiseases;
     private Boolean recentlyHospitalized;
     private List<String> antibiotics;
+    private List<String> medicationNames;
+
 }

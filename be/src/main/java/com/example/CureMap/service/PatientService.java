@@ -2,10 +2,12 @@ package com.example.CureMap.service;
 
 import com.example.CureMap.domain.AgeGroup;
 import com.example.CureMap.domain.AntibioticHistory;
+import com.example.CureMap.domain.CurrentMedication;
 import com.example.CureMap.domain.Patient;
 import com.example.CureMap.dto.patient.PatientRequestDto;
 import com.example.CureMap.dto.patient.PatientResponseDto;
 import com.example.CureMap.repository.AntibioticHistoryRepository;
+import com.example.CureMap.repository.CurrentMedicationRepository;
 import com.example.CureMap.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ public class PatientService {
 
     private final PatientRepository patientRepository;
     private final AntibioticHistoryRepository antibioticHistoryRepository;
+    private final CurrentMedicationRepository currentMedicationRepository;
 
     @Transactional
     public Long createPatient(PatientRequestDto dto) {
@@ -42,6 +45,17 @@ public class PatientService {
                         .antibioticName(name)
                         .build();
                 antibioticHistoryRepository.save(history);
+            }
+        }
+
+        List<String> medicationNames = dto.getMedicationNames();
+        if (medicationNames != null) {
+            for (String name : medicationNames) {
+                CurrentMedication medication = CurrentMedication.builder()
+                        .patient(patient)
+                        .medicationName(name)
+                        .build();
+                currentMedicationRepository.save(medication);
             }
         }
 
