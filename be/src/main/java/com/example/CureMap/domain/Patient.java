@@ -40,6 +40,9 @@ public class Patient {
     private List<AntibioticHistory> antibioticHistories = new ArrayList<>();
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CurrentMedication> currentMedications = new ArrayList<>();
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PredictionResult> predictionResults = new ArrayList<>();
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
