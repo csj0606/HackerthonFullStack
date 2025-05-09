@@ -64,12 +64,10 @@ const Button = styled.button`
 
 const InfoCheckPage = () => {
   const [patientId, setPatientId] = useState("");
-  const [patientName, setPatientName] = useState("");
 
   const handleSearch = () => {
     // 여기가 핵심! input 값 사용 가능
     console.log("환자 ID:", patientId);
-    console.log("환자 이름:", patientName);
 
     // 외부 모듈로 내보내고 싶다면 여기에 콜백 또는 상태 리프팅 활용
     // 예: props.onSubmit({ id: patientId, name: patientName })
@@ -88,17 +86,6 @@ const InfoCheckPage = () => {
           onChange={(e) => setPatientId(e.target.value)}
         />
         <SubText>EMR 연동 또는 자체 생성</SubText>
-      </IdGroup>
-
-      <IdGroup>
-        <Label>환자 이름</Label>
-        <Input
-          type="text"
-          placeholder="Enter Name"
-          value={patientName}
-          onChange={(e) => setPatientName(e.target.value)}
-        />
-        <SubText>Basic personal information</SubText>
       </IdGroup>
 
       <Button onClick={handleSearch}>Search</Button>

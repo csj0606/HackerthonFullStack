@@ -31,7 +31,7 @@ const LeftSection = styled.div`
 `;
 
 const RightSection = styled.div`
-  margin-top: 10%;
+  margin-top: 20px;
   text-align: left;
   flex: 2;
   display: flex;
@@ -60,6 +60,20 @@ const Input = styled.input`
 const Row = styled.div`
   display: flex;
   gap: 10px;
+  align-items: center;
+`;
+
+const Checkbox = styled.input.attrs({ type: "checkbox" })`
+  margin-right: 6px;
+  cursor: pointer;
+`;
+
+const CheckboxLabel = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-size: 14px;
 `;
 
 const SubmitButton = styled.button`
@@ -107,18 +121,34 @@ const diseaseMap = {
 const CreateTestResult = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
   const [basicInfo, setBasicInfo] = useState({});
-  const [antibioticInfo, setAntibioticInfo] = useState({
-    current: "",
-    history: "",
-    resistant: [],
+  const [testResult, setTestResult] = useState({
+    specimen: "",
+    exam: "",
+    resultOption: "", // "positive", "negative", or "manual"
+    result: "",
+    subExam: "",
+    subResult: "",
   });
 
   useEffect(() => {
     if (location.state) {
-      setBasicInfo(location.state);
+      const { testResult: prevResult, ...rest } = location.state;
+      setBasicInfo(rest);
+      if (prevResult) {
+        setTestResult(prevResult);
+      }
     }
   }, [location.state]);
+
+  const handleOptionChange = (option) => {
+    setTestResult((prev) => ({
+      ...prev,
+      resultOption: option,
+      result: option === "manual" ? prev.result : option,
+    }));
+  };
 
   const fullData = {
     ...basicInfo,
@@ -171,13 +201,18 @@ const CreateTestResult = () => {
   };
 
   const handleBack = () => {
-    navigate("/createNew/antibiotics", { state: basicInfo });
+    navigate("/createNew/antibiotics", {
+      state: {
+        ...basicInfo,
+        testResult,
+      },
+    });
   };
 
   return (
     <Container>
       <LeftSection>
-        <h1>기본 결과를 입력해주세요.</h1>
+        <h1>기본 검사 결과를 입력해주세요.</h1>
         <p>혈액 또는 소변을 통한 검사는 2~3시간 후 결과를 알 수 있습니다.</p>
       </LeftSection>
 
@@ -186,9 +221,9 @@ const CreateTestResult = () => {
           <Label>검체명</Label>
           <Input
             placeholder="Select or Enter Current Antibiotics"
-            value={antibioticInfo.current}
+            value={testResult.specimen}
             onChange={(e) =>
-              setAntibioticInfo({ ...antibioticInfo, current: e.target.value })
+              setTestResult({ ...testResult, specimen: e.target.value })
             }
           />
           <SubText>Include start date</SubText>
@@ -198,9 +233,9 @@ const CreateTestResult = () => {
           <Label>검사명</Label>
           <Input
             placeholder="Enter Recent Antibiotic History"
-            value={antibioticInfo.history}
+            value={testResult.exam}
             onChange={(e) =>
-              setAntibioticInfo({ ...antibioticInfo, history: e.target.value })
+              setTestResult({ ...testResult, exam: e.target.value })
             }
           />
           <SubText>Include medication, duration, frequency</SubText>
@@ -208,35 +243,61 @@ const CreateTestResult = () => {
 
         <div>
           <Label>수치결과내용</Label>
-          <Input
-            placeholder="Enter Recent Antibiotic History"
-            value={antibioticInfo.history}
-            onChange={(e) =>
-              setAntibioticInfo({ ...antibioticInfo, history: e.target.value })
-            }
-          />
+          <Row>
+            <CheckboxLabel>
+              <Checkbox
+                checked={testResult.resultOption === "positive"}
+                onChange={() => handleOptionChange("positive")}
+              />
+              Positive
+            </CheckboxLabel>
+            <CheckboxLabel>
+              <Checkbox
+                checked={testResult.resultOption === "negative"}
+                onChange={() => handleOptionChange("negative")}
+              />
+              Negative
+            </CheckboxLabel>
+            <CheckboxLabel>
+              <Checkbox
+                checked={testResult.resultOption === "manual"}
+                onChange={() => handleOptionChange("manual")}
+              />
+              직접 입력
+            </CheckboxLabel>
+            <Input
+              placeholder="Enter Result"
+              disabled={testResult.resultOption !== "manual"}
+              value={
+                testResult.resultOption === "manual" ? testResult.result : ""
+              }
+              onChange={(e) =>
+                setTestResult({ ...testResult, result: e.target.value })
+              }
+            />
+          </Row>
           <SubText>Include medication, duration, frequency</SubText>
         </div>
 
         <div>
           <Label>부검사명</Label>
           <Input
-            placeholder="Enter Recent Antibiotic History"
-            value={antibioticInfo.history}
+            placeholder="Enter Sub Test Name"
+            value={testResult.subExam}
             onChange={(e) =>
-              setAntibioticInfo({ ...antibioticInfo, history: e.target.value })
+              setTestResult({ ...testResult, subExam: e.target.value })
             }
           />
           <SubText>Include medication, duration, frequency</SubText>
         </div>
 
         <div>
-          <Label>부검사 결과</Label>
+          <Label>부검사 결과내용</Label>
           <Input
-            placeholder="Enter Recent Antibiotic History"
-            value={antibioticInfo.history}
+            placeholder="Enter Sub Test Result"
+            value={testResult.subResult}
             onChange={(e) =>
-              setAntibioticInfo({ ...antibioticInfo, history: e.target.value })
+              setTestResult({ ...testResult, subResult: e.target.value })
             }
           />
           <SubText>Include medication, duration, frequency</SubText>

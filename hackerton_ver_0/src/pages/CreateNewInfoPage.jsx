@@ -8,7 +8,7 @@ const Container = styled.div`
   width: 100vw;
   padding: 60px;
   box-sizing: border-box;
-  background: white;
+  background: linear-gradient(to bottom, rgb(255, 255, 255), #acd6d5);
 `;
 
 const LeftSection = styled.div`
@@ -66,8 +66,8 @@ const ButtonSelect = styled.button`
   flex: 1;
   padding: 12px;
   border: 1px solid #ccc;
-  background-color: ${({ active }) => (active ? "#000" : "#f9f9f9")};
-  color: ${({ active }) => (active ? "#fff" : "#000")};
+  background-color: ${({ active }) => (active ? "#acd6d5" : "#f9f9f9")};
+  color: #000;
   border-radius: 8px;
   cursor: pointer;
 `;
@@ -83,8 +83,8 @@ const Tag = styled.button`
   padding: 8px 12px;
   border-radius: 10px;
   border: 1px solid #ccc;
-  background: ${({ active }) => (active ? "#000" : "#f2f2f2")};
-  color: ${({ active }) => (active ? "#fff" : "#000")};
+  background: ${({ active }) => (active ? "#acd6d5" : "#f2f2f2")};
+  color: #000;
   cursor: pointer;
   font-size: 14px;
 `;
