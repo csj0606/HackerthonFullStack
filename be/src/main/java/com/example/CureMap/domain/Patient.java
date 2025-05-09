@@ -33,8 +33,9 @@ public class Patient {
     @Enumerated(EnumType.STRING)
     private VisitType visitType;
 
-    @ElementCollection
-    private List<String> underlyingDiseases;
+    @ElementCollection(fetch = FetchType.LAZY)
+    @Enumerated(EnumType.STRING)
+    private List<UnderlyingDisease> underlyingDiseases;
 
     private LocalDate registrationDate;
 

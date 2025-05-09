@@ -1,9 +1,6 @@
 package com.example.CureMap.dto.patient;
 
-import com.example.CureMap.domain.AgeGroup;
-import com.example.CureMap.domain.Patient;
-import com.example.CureMap.domain.PatientStatus;
-import com.example.CureMap.domain.VisitType;
+import com.example.CureMap.domain.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +18,7 @@ public class PatientResponseDto {
     private String gender;
     private LocalDate birthDate;
     private VisitType visitType;
-    private List<String> underlyingDiseases;
+    private List<UnderlyingDisease> underlyingDiseases;
     private LocalDate registrationDate;
     private PatientStatus status;
     private Boolean recentlyHospitalized;
