@@ -1,33 +1,51 @@
 package com.example.CureMap.service;
 
 import com.example.CureMap.domain.AgeGroup;
+import com.example.CureMap.domain.AntibioticHistory;
 import com.example.CureMap.domain.Patient;
 import com.example.CureMap.dto.patient.PatientRequestDto;
 import com.example.CureMap.dto.patient.PatientResponseDto;
+import com.example.CureMap.repository.AntibioticHistoryRepository;
 import com.example.CureMap.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class PatientService {
 
     private final PatientRepository patientRepository;
+    private final AntibioticHistoryRepository antibioticHistoryRepository;
 
+    @Transactional
     public Long createPatient(PatientRequestDto dto) {
+        // 1. 환자 저장
         Patient patient = Patient.builder()
-                .name(dto.getName())
+                .hospitalId(dto.getHospitalId())
                 .ageGroup(AgeGroup.valueOf(dto.getAgeGroup()))
                 .gender(dto.getGender())
-                .birthDate(dto.getBirthDate())
                 .underlyingDiseases(dto.getUnderlyingDiseases())
-                .registrationDate(dto.getRegistrationDate())
-                .status(dto.getStatus())
-                .visitType(dto.getVisitType())
                 .recentlyHospitalized(dto.getRecentlyHospitalized())
                 .build();
 
-        return patientRepository.save(patient).getId();
+        patientRepository.save(patient);
+
+        // 2. 항생제 복용 이력 저장
+        List<String> antibioticNames = dto.getAntibiotics();
+        if (antibioticNames != null) {
+            for (String name : antibioticNames) {
+                AntibioticHistory history = AntibioticHistory.builder()
+                        .patient(patient)
+                        .antibioticName(name)
+                        .build();
+                antibioticHistoryRepository.save(history);
+            }
+        }
+
+        return patient.getId();
     }
 
     public PatientResponseDto getPatientById(Long id) {
@@ -36,4 +54,5 @@ public class PatientService {
 
         return new PatientResponseDto(patient);
     }
+
 }

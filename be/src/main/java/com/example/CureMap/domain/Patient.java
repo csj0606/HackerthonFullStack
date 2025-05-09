@@ -20,9 +20,8 @@ public class Patient {
     @Column(name = "patient_id")
     private Long id;
 
-    private String name;
+    private String hospitalId;
     private String gender;
-    private LocalDate birthDate;
 
     @Column(name = "recent_hospitalized")
     private Boolean recentlyHospitalized;
@@ -30,17 +29,10 @@ public class Patient {
     @Enumerated(EnumType.STRING)
     private AgeGroup ageGroup;
 
-    @Enumerated(EnumType.STRING)
-    private VisitType visitType;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
     private List<UnderlyingDisease> underlyingDiseases;
-
-    private LocalDate registrationDate;
-
-    @Enumerated(EnumType.STRING)
-    private PatientStatus status;
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LabResult> labResults = new ArrayList<>();
