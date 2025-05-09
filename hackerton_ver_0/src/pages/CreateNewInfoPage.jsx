@@ -8,7 +8,7 @@ const Container = styled.div`
   width: 100vw;
   padding: 60px;
   box-sizing: border-box;
-  background: linear-gradient(to bottom, rgb(255, 255, 255), #acd6d5);
+  background: white;
 `;
 
 const LeftSection = styled.div`
@@ -66,8 +66,8 @@ const ButtonSelect = styled.button`
   flex: 1;
   padding: 12px;
   border: 1px solid #ccc;
-  background-color: ${({ active }) => (active ? "#acd6d5" : "#f9f9f9")};
-  color: #000;
+  background-color: ${({ $active }) => ($active ? "#000" : "#f9f9f9")};
+  color: ${({ $active }) => ($active ? "#fff" : "#000")};
   border-radius: 8px;
   cursor: pointer;
 `;
@@ -83,8 +83,8 @@ const Tag = styled.button`
   padding: 8px 12px;
   border-radius: 10px;
   border: 1px solid #ccc;
-  background: ${({ active }) => (active ? "#acd6d5" : "#f2f2f2")};
-  color: #000;
+  background: ${({ $active }) => ($active ? "#000" : "#f2f2f2")};
+  color: ${({ $active }) => ($active ? "#fff" : "#000")};
   cursor: pointer;
   font-size: 14px;
 `;
@@ -192,7 +192,7 @@ const PatientForm = () => {
             {ageOptions.map((age) => (
               <Tag
                 key={age}
-                active={formData.age === age}
+                $active={formData.age === age}
                 onClick={() => setFormData({ ...formData, age })}
               >
                 {age}
@@ -206,13 +206,13 @@ const PatientForm = () => {
           <Label>성별</Label>
           <Row>
             <ButtonSelect
-              active={formData.gender === "남"}
+              $active={formData.gender === "남"}
               onClick={() => setFormData({ ...formData, gender: "남" })}
             >
               남
             </ButtonSelect>
             <ButtonSelect
-              active={formData.gender === "여"}
+              $active={formData.gender === "여"}
               onClick={() => setFormData({ ...formData, gender: "여" })}
             >
               여
@@ -226,7 +226,7 @@ const PatientForm = () => {
             {diseaseOptions.map((item) => (
               <Tag
                 key={item}
-                active={formData.diseases.includes(item)}
+                $active={formData.diseases.includes(item)}
                 onClick={() => toggleDisease(item)}
               >
                 {item}
@@ -240,13 +240,13 @@ const PatientForm = () => {
           <Label>최근 3개월 입원 여부</Label>
           <Row>
             <ButtonSelect
-              active={formData.hospitalized === "yes"}
+              $active={formData.hospitalized === "yes"}
               onClick={() => setFormData({ ...formData, hospitalized: "yes" })}
             >
               Yes
             </ButtonSelect>
             <ButtonSelect
-              active={formData.hospitalized === "no"}
+              $active={formData.hospitalized === "no"}
               onClick={() => setFormData({ ...formData, hospitalized: "no" })}
             >
               No

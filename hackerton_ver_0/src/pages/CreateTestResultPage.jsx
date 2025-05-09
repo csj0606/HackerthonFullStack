@@ -123,6 +123,7 @@ const CreateTestResult = () => {
   const navigate = useNavigate();
 
   const [basicInfo, setBasicInfo] = useState({});
+  const [antibioticInfo, setAntibioticInfo] = useState({});
   const [testResult, setTestResult] = useState({
     specimen: "",
     exam: "",
@@ -134,11 +135,15 @@ const CreateTestResult = () => {
 
   useEffect(() => {
     if (location.state) {
-      const { testResult: prevResult, ...rest } = location.state;
+      const {
+        testResult: prevResult,
+        antibioticInfo: prevAntibiotic,
+        ...rest
+      } = location.state;
+
       setBasicInfo(rest);
-      if (prevResult) {
-        setTestResult(prevResult);
-      }
+      if (prevResult) setTestResult(prevResult);
+      if (prevAntibiotic) setAntibioticInfo(prevAntibiotic);
     }
   }, [location.state]);
 
@@ -153,6 +158,7 @@ const CreateTestResult = () => {
   const fullData = {
     ...basicInfo,
     ...antibioticInfo,
+    ...testResult,
   };
 
   const toPatientRequest = (formData) => ({
@@ -165,6 +171,7 @@ const CreateTestResult = () => {
 
   const handleSubmit = async () => {
     const payload = toPatientRequest(fullData);
+    console.log(fullData);
     try {
       // 1. 환자 등록 요청
       const res = await fetch("http://localhost:8080/api/patients", {
@@ -185,7 +192,7 @@ const CreateTestResult = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            medicationNames: formData.medications,
+            medicationNames: fullData.medications,
           }),
         }
       );
@@ -194,10 +201,11 @@ const CreateTestResult = () => {
 
       const medResult = await medRes.json();
       console.log("약물 등록 완료:", medResult);
+
+      navigate(`/SimulatePage_1/${id}`, { state: fullData });
     } catch (err) {
       console.error("에러:", err.message);
     }
-    navigate(`/createNew/test_result`, { state: fullData });
   };
 
   const handleBack = () => {

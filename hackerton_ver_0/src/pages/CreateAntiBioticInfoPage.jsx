@@ -111,15 +111,14 @@ const AntibioticForm_1 = () => {
 
   const handleSubmit = () => {
     console.log("제출 데이터:", basicInfo, antibioticInfo);
-
     navigate(`/createNew/test_result`, {
-      state: { ...basicInfo, antibioticInfo },
+      state: { ...basicInfo, ...antibioticInfo },
     });
   };
 
   const handleBack = () => {
     navigate("/createNew/Info", {
-      state: { ...basicInfo, antibioticInfo },
+      state: { ...basicInfo, ...antibioticInfo },
     });
   };
 
