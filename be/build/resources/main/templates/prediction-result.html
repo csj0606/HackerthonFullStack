@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+</head>
+<body>
+<h1>Prediction Result for Patient</h1>
+
+<h2>Antibiotic: <span th:text="${predictionResult.antibioticName}"></span></h2>
+<p>Success Probability: <span th:text="${predictionResult.successProbability}"></span></p>
+<p>Mortality Risk: <span th:text="${predictionResult.mortalityRisk}"></span></p>
+<p>Side Effect Risk: <span th:text="${predictionResult.sideEffectRisk}"></span></p>
+<p>Predicted Length of Stay: <span th:text="${predictionResult.predictedLengthOfStay}"></span> days</p>
+
+<h3>Recommendations</h3>
+<ul>
+    <li th:each="recommendation : ${predictionResult.recommendations}">
+        <span th:text="${recommendation.antibioticName}"></span> -
+        <span th:text="${recommendation.rationale}"></span>
+    </li>
+</ul>
+</body>
+</html>

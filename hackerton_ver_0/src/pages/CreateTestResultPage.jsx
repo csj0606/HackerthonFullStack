@@ -83,6 +83,26 @@ const BackButton = styled.button`
   border-radius: 12px;
   cursor: pointer;
 `;
+const ageMap = {
+  "0~9세": "AGE_0_9",
+  "10~19세": "AGE_10_19",
+  "20~29세": "AGE_20_29",
+  "30~39세": "AGE_30_39",
+  "40~49세": "AGE_40_49",
+  "50~59세": "AGE_50_59",
+  "60~69세": "AGE_60_69",
+  "70세이상": "AGE_70_PLUS",
+};
+
+const diseaseMap = {
+  전립선질환: "PROSTATE_DISEASE",
+  요로결석: "UROLITHIASIS",
+  당뇨: "DIABETES",
+  면역저하: "IMMUNE_DEFICIENCY",
+  선천성요로기형: "CONGENITAL_URINARY_TRACT_MALFORMATION",
+  신장질환: "RENAL_DISEASE",
+  배뇨장애: "VOIDING_DYSFUNCTION",
+};
 
 const CreateTestResult = () => {
   const location = useLocation();
@@ -105,29 +125,48 @@ const CreateTestResult = () => {
     ...antibioticInfo,
   };
 
-  const toPatientRequest = (formData) => {
-    return {
-      name: formData.patientId,
-      ageGroup: ageMap[formData.age],
-      gender: formData.gender,
-      underlyingDiseases: formData.diseases,
-      recentlyHospitalized: formData.hospitalized === "yes",
-    };
-  };
+  const toPatientRequest = (formData) => ({
+    name: formData.patientId,
+    ageGroup: ageMap[formData.age],
+    gender: formData.gender,
+    underlyingDiseases: formData.diseases.map((kor) => diseaseMap[kor]),
+    recentlyHospitalized: formData.hospitalized === "yes",
+  });
 
   const handleSubmit = async () => {
+    const payload = toPatientRequest(fullData);
     try {
+      // 1. 환자 등록 요청
       const res = await fetch("http://localhost:8080/api/patients", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const result = await res.json();
-      console.log("등록 성공:", result);
+
+      if (!res.ok) throw new Error("환자 등록 실패");
+
+      const id = await res.json(); // 여기서 바로 숫자 ID 받음
+      console.log("등록 성공, 받은 ID:", id);
+
+      // 2. ID 기반 약물 등록 요청
+      const medRes = await fetch(
+        `http://localhost:8080/api/patients/${id}/medications`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            medicationNames: formData.medications,
+          }),
+        }
+      );
+
+      if (!medRes.ok) throw new Error("약물 등록 실패");
+
+      const medResult = await medRes.json();
+      console.log("약물 등록 완료:", medResult);
     } catch (err) {
       console.error("에러:", err.message);
     }
-
     navigate(`/createNew/test_result`, { state: fullData });
   };
 

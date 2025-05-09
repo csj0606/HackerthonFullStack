@@ -57,11 +57,6 @@ const Input = styled.input`
   width: 100%;
 `;
 
-const Row = styled.div`
-  display: flex;
-  gap: 10px;
-`;
-
 const SubmitButton = styled.button`
   width: 100%;
   padding: 16px;

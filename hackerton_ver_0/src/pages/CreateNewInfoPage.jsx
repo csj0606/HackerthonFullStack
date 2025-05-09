@@ -112,17 +112,6 @@ const ageOptions = [
   "70세이상",
 ];
 
-const ageMap = {
-  "0~9세": "AGE_0_9",
-  "10~19세": "AGE_10_19",
-  "20~29세": "AGE_20_29",
-  "30~39세": "AGE_30_39",
-  "40~49세": "AGE_40_49",
-  "50~59세": "AGE_50_59",
-  "60~69세": "AGE_60_69",
-  "70세이상": "AGE_70_PLUS",
-};
-
 const diseaseOptions = [
   "선천성 요로계 기형",
   "요로결석",
@@ -142,7 +131,7 @@ const PatientForm = () => {
     gender: "",
     diseases: [],
     hospitalized: "",
-    medications: "",
+    medications: [],
     rescentantibiotics: [],
   });
 
