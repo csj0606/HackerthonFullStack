@@ -3,30 +3,34 @@ import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
+  font-family: Arial, sans-serif;
   display: flex;
   height: 100vh;
   width: 100vw;
   padding: 60px;
   box-sizing: border-box;
-  background: white;
+  background: linear-gradient(to bottom, rgb(255, 255, 255), #acd6d5);
 `;
 
 const LeftSection = styled.div`
   flex: 1;
+  font-family: "Lilita One", sans-serif;
   padding: 60px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  text-align: left;
+  color: black;
+  font-weight: bold;
 
   h1 {
-    font-size: 32px;
-    font-weight: bold;
+    width: 400px;
+    font-size: 45px;
     margin-bottom: 20px;
   }
 
   p {
     font-size: 16px;
-    color: gray;
   }
 `;
 
@@ -40,7 +44,7 @@ const RightSection = styled.div`
 `;
 
 const Label = styled.div`
-  font-size: 14px;
+  font-size: 20px;
   font-weight: bold;
   margin-bottom: 6px;
 `;
@@ -54,7 +58,7 @@ const Input = styled.input`
   padding: 12px;
   border-radius: 8px;
   border: 1px solid #ccc;
-  width: 100%;
+  width: 98%;
 `;
 
 const Row = styled.div`
@@ -79,6 +83,7 @@ const TagGroup = styled.div`
 `;
 
 const Tag = styled.button`
+  margin-right: 8px;
   width: fit-content;
   padding: 8px 12px;
   border-radius: 10px;
@@ -90,7 +95,8 @@ const Tag = styled.button`
 `;
 
 const SubmitButton = styled.button`
-  width: 100%;
+  align-self: center;
+  width: 40%;
   padding: 16px;
   font-size: 16px;
   background: black;
@@ -157,8 +163,7 @@ const PatientForm = () => {
         ...formData,
       },
     });
-    console.log("제출 데이터:", {
-      ...location.state,
+    console.log("현재 데이터:", {
       ...formData,
     });
   };

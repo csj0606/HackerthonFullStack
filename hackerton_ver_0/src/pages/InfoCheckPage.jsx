@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   justify-content: center;
   width: 100vw;
   height: calc(100vh - 60px);
-  background: white;
+  background: linear-gradient(to bottom, rgb(255, 255, 255), #acd6d5);
 `;
 
 const Title = styled.h1`

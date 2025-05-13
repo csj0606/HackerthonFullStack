@@ -1,13 +1,13 @@
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./layout/root-layout";
-import HomePage from "./pages/Homepage";
+import HomePage from "./pages/HomePage";
 import InfoCheckPage from "./pages/InfoCheckPage";
 import PatientForm from "./pages/CreateNewInfoPage";
 import AntibioticForm from "./pages/CreateAntiBioticInfoPage";
 import CreateTestResult from "./pages/CreateTestResultPage";
 import SimulatePage1 from "./pages/SimulatePage_1";
-import SimulatePage2 from "./pages/SimulatePage_2";
+import OutputPage from "./pages/OutputPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -39,8 +39,8 @@ const router = createBrowserRouter([
         element: <SimulatePage1 />,
       },
       {
-        path: "/SimulatePage_2/:patientId",
-        element: <SimulatePage2 />,
+        path: "/output/:patientId",
+        element: <OutputPage />,
       },
     ],
   },

@@ -3,35 +3,39 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
+  font-family: Arial, sans-serif;
   display: flex;
   height: 100vh;
   width: 100vw;
   padding: 60px;
   box-sizing: border-box;
-  background: white;
+  background: linear-gradient(to bottom, rgb(255, 255, 255), #acd6d5);
 `;
 
 const LeftSection = styled.div`
   flex: 1;
+  font-family: "Lilita One", sans-serif;
   padding: 60px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  text-align: left;
+  color: black;
+  font-weight: bold;
 
   h1 {
-    font-size: 32px;
-    font-weight: bold;
+    width: 400px;
+    font-size: 45px;
     margin-bottom: 20px;
   }
 
   p {
     font-size: 16px;
-    color: gray;
   }
 `;
 
 const RightSection = styled.div`
-  margin-top: 10%;
+  margin-top: 80px;
   text-align: left;
   flex: 2;
   display: flex;
@@ -40,7 +44,7 @@ const RightSection = styled.div`
 `;
 
 const Label = styled.div`
-  font-size: 14px;
+  font-size: 20px;
   font-weight: bold;
   margin-bottom: 6px;
 `;
@@ -54,11 +58,12 @@ const Input = styled.input`
   padding: 12px;
   border-radius: 8px;
   border: 1px solid #ccc;
-  width: 100%;
+  width: 98%;
 `;
 
 const SubmitButton = styled.button`
-  width: 100%;
+  float: right;
+  width: 40%;
   padding: 16px;
   font-size: 16px;
   background: black;
@@ -69,10 +74,11 @@ const SubmitButton = styled.button`
 `;
 
 const BackButton = styled.button`
-  width: 100%;
+  float: left;
+  width: 40%;
   padding: 16px;
   font-size: 16px;
-  background: lightgray;
+  background: rgb(240, 240, 240);
   color: black;
   border: none;
   border-radius: 12px;
@@ -110,7 +116,7 @@ const AntibioticForm_1 = () => {
   }, [location.state]);
 
   const handleSubmit = () => {
-    console.log("제출 데이터:", basicInfo, antibioticInfo);
+    console.log("현재 데이터:", basicInfo, antibioticInfo);
     navigate(`/createNew/test_result`, {
       state: { ...basicInfo, ...antibioticInfo },
     });
@@ -125,10 +131,9 @@ const AntibioticForm_1 = () => {
   return (
     <Container>
       <LeftSection>
-        <h1>항생제 사용 이력을 입력해주세요.</h1>
+        <h1>환자의 생징후 정보를 입력해주세요.</h1>
         <p>
-          현재 복용 중인 항생제와 이력을 통해 내성 위험까지 고려한 결과를
-          제공합니다.
+          환자의 맥박, 호흡, 체온, SBP, DBP 정보를 고려한 결과를 제공합니다.
         </p>
       </LeftSection>
 
@@ -136,7 +141,7 @@ const AntibioticForm_1 = () => {
         <div>
           <Label>맥박</Label>
           <Input
-            placeholder="Enter pulse rate"
+            placeholder="ex) 70.1"
             value={antibioticInfo.pulse_rate}
             onChange={(e) =>
               setAntibioticInfo({
@@ -145,13 +150,13 @@ const AntibioticForm_1 = () => {
               })
             }
           />
-          <SubText>Include start date</SubText>
+          <SubText>Enter pulse rate</SubText>
         </div>
 
         <div>
           <Label>호흡</Label>
           <Input
-            placeholder="Enter breathing rate"
+            placeholder="ex)20.0"
             value={antibioticInfo.breathing}
             onChange={(e) =>
               setAntibioticInfo({
@@ -160,13 +165,13 @@ const AntibioticForm_1 = () => {
               })
             }
           />
-          <SubText>Include medication, duration, frequency</SubText>
+          <SubText>Enter breathing rate</SubText>
         </div>
 
         <div>
           <Label>체온</Label>
           <Input
-            placeholder="Enter temperature"
+            placeholder="ex)36.2"
             value={antibioticInfo.temperature}
             onChange={(e) =>
               setAntibioticInfo({
@@ -175,35 +180,36 @@ const AntibioticForm_1 = () => {
               })
             }
           />
-          <SubText>Include medication, duration, frequency</SubText>
+          <SubText>Enter temperature</SubText>
         </div>
 
         <div>
           <Label>SBP</Label>
           <Input
-            placeholder="Enter SBP"
+            placeholder="ex)117.0"
             value={antibioticInfo.SBP}
             onChange={(e) =>
               setAntibioticInfo({ ...antibioticInfo, SBP: e.target.value })
             }
           />
-          <SubText>Include medication, duration, frequency</SubText>
+          <SubText>Enter SBP</SubText>
         </div>
 
         <div>
           <Label>DBP</Label>
           <Input
-            placeholder="Enter DBP"
+            placeholder="ex)74.0"
             value={antibioticInfo.DBP}
             onChange={(e) =>
               setAntibioticInfo({ ...antibioticInfo, DBP: e.target.value })
             }
           />
-          <SubText>Include medication, duration, frequency</SubText>
+          <SubText>Enter DBP</SubText>
         </div>
-
-        <SubmitButton onClick={handleSubmit}>Next</SubmitButton>
-        <BackButton onClick={handleBack}>← Back</BackButton>
+        <div>
+          <SubmitButton onClick={handleSubmit}>Next</SubmitButton>
+          <BackButton onClick={handleBack}>← Back</BackButton>
+        </div>
       </RightSection>
     </Container>
   );

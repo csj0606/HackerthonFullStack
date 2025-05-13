@@ -3,35 +3,39 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
+  font-family: Arial, sans-serif;
   display: flex;
   height: 100vh;
   width: 100vw;
   padding: 60px;
   box-sizing: border-box;
-  background: white;
+  background: linear-gradient(to bottom, rgb(255, 255, 255), #acd6d5);
 `;
 
 const LeftSection = styled.div`
   flex: 1;
+  font-family: "Lilita One", sans-serif;
   padding: 60px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  text-align: left;
+  color: black;
+  font-weight: bold;
 
   h1 {
-    font-size: 32px;
-    font-weight: bold;
+    width: 350px;
+    font-size: 45px;
     margin-bottom: 20px;
   }
 
   p {
     font-size: 16px;
-    color: gray;
   }
 `;
 
 const RightSection = styled.div`
-  margin-top: 20px;
+  margin-top: 80px;
   text-align: left;
   flex: 2;
   display: flex;
@@ -40,7 +44,7 @@ const RightSection = styled.div`
 `;
 
 const Label = styled.div`
-  font-size: 14px;
+  font-size: 20px;
   font-weight: bold;
   margin-bottom: 6px;
 `;
@@ -54,7 +58,7 @@ const Input = styled.input`
   padding: 12px;
   border-radius: 8px;
   border: 1px solid #ccc;
-  width: 100%;
+  width: 98%;
 `;
 
 const Row = styled.div`
@@ -69,15 +73,17 @@ const Checkbox = styled.input.attrs({ type: "checkbox" })`
 `;
 
 const CheckboxLabel = styled.label`
+  width: 30%;
   display: flex;
   align-items: center;
   gap: 4px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 20px;
 `;
 
 const SubmitButton = styled.button`
-  width: 100%;
+  float: right;
+  width: 40%;
   padding: 16px;
   font-size: 16px;
   background: black;
@@ -88,10 +94,11 @@ const SubmitButton = styled.button`
 `;
 
 const BackButton = styled.button`
-  width: 100%;
+  float: left;
+  width: 40%;
   padding: 16px;
   font-size: 16px;
-  background: lightgray;
+  background: rgb(243, 243, 243);
   color: black;
   border: none;
   border-radius: 12px;
@@ -161,17 +168,23 @@ const CreateTestResult = () => {
     ...testResult,
   };
 
-  const toPatientRequest = (formData) => ({
-    name: formData.patientId,
-    ageGroup: ageMap[formData.age],
-    gender: formData.gender,
-    underlyingDiseases: formData.diseases.map((kor) => diseaseMap[kor]),
-    recentlyHospitalized: formData.hospitalized === "yes",
+  const toPatientRequest = (fullData) => ({
+    hospitalId: fullData.patientId,
+    ageGroup: ageMap[fullData.age],
+    gender: fullData.gender,
+    underlyingDiseases: fullData.diseases.map((kor) => diseaseMap[kor]),
+    antibiotics: fullData.recentantibiotics
+      ? fullData.recentantibiotics.split(",").map((s) => s.trim())
+      : [],
+    medicationNames: fullData.medications
+      ? fullData.medications.split(",").map((s) => s.trim())
+      : [],
+    recentlyHospitalized: fullData.hospitalized === "yes",
   });
 
   const handleSubmit = async () => {
-    const payload = toPatientRequest(fullData);
     console.log(fullData);
+    const payload = toPatientRequest(fullData);
     try {
       // 1. 환자 등록 요청
       const res = await fetch("http://localhost:8080/api/patients", {
@@ -185,24 +198,51 @@ const CreateTestResult = () => {
       const id = await res.json(); // 여기서 바로 숫자 ID 받음
       console.log("등록 성공, 받은 ID:", id);
 
-      // 2. ID 기반 약물 등록 요청
-      const medRes = await fetch(
-        `http://localhost:8080/api/patients/${id}/medications`,
+      // 2. ID 기반 생징후 등록
+      const vtres = await fetch(
+        `http://localhost:8080/api/patients/${id}/vitals`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            medicationNames: fullData.medications,
+            patientId: id,
+            heartRate: fullData.pulse_rate,
+            respiratoryRate: fullData.breathing,
+            temperature: fullData.temperature,
+            systolicBP: fullData.SBP,
+            diastolicBP: fullData.DBP,
           }),
         }
       );
 
-      if (!medRes.ok) throw new Error("약물 등록 실패");
+      if (!vtres.ok) throw new Error("생징후 등록 실패");
 
-      const medResult = await medRes.json();
-      console.log("약물 등록 완료:", medResult);
+      const vtresult = await vtres.json();
+      console.log("생징후 등록 완료:", vtresult);
 
-      navigate(`/SimulatePage_1/${id}`, { state: fullData });
+      // 3. ID 기반 검사 결과 등록
+      const lbres = await fetch(
+        `http://localhost:8080/api/patients/${id}/lab-result`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            patientId: id,
+            specimenName: fullData.specimen,
+            mainTestName: fullData.exam,
+            mainTestResult: fullData.result,
+            subTestName: fullData.subExam,
+            subTestResult: fullData.subResult,
+          }),
+        }
+      );
+
+      if (!lbres.ok) throw new Error("검사 결과 등록 실패");
+
+      const lbresult = await lbres.json();
+      console.log("검사 결과 등록 완료:", lbresult);
+
+      navigate(`/SimulatePage_1/${id}`, { state: { patientId: id } });
     } catch (err) {
       console.error("에러:", err.message);
     }
@@ -236,7 +276,6 @@ const CreateTestResult = () => {
           />
           <SubText>Include start date</SubText>
         </div>
-
         <div>
           <Label>검사명</Label>
           <Input
@@ -248,7 +287,6 @@ const CreateTestResult = () => {
           />
           <SubText>Include medication, duration, frequency</SubText>
         </div>
-
         <div>
           <Label>수치결과내용</Label>
           <Row>
@@ -279,14 +317,11 @@ const CreateTestResult = () => {
               value={
                 testResult.resultOption === "manual" ? testResult.result : ""
               }
-              onChange={(e) =>
-                setTestResult({ ...testResult, result: e.target.value })
-              }
+              onChange={(e) => setTestResult({ ...testResult, result: none })}
             />
           </Row>
           <SubText>Include medication, duration, frequency</SubText>
         </div>
-
         <div>
           <Label>부검사명</Label>
           <Input
@@ -298,7 +333,6 @@ const CreateTestResult = () => {
           />
           <SubText>Include medication, duration, frequency</SubText>
         </div>
-
         <div>
           <Label>부검사 결과내용</Label>
           <Input
@@ -310,9 +344,10 @@ const CreateTestResult = () => {
           />
           <SubText>Include medication, duration, frequency</SubText>
         </div>
-
-        <SubmitButton onClick={handleSubmit}>Register</SubmitButton>
-        <BackButton onClick={handleBack}>← Back</BackButton>
+        <div>
+          <SubmitButton onClick={handleSubmit}>Register</SubmitButton>
+          <BackButton onClick={handleBack}>← Back</BackButton>
+        </div>
       </RightSection>
     </Container>
   );

@@ -13,19 +13,20 @@ const Wrapper = styled.div`
 `;
 
 const Logo = styled.img`
-  width: 250px;
+  width: 320px;
 `;
 
 const Title = styled.h1`
   inline-size: 800px;
   overflow-wrap: break-word;
-  font-size: 50px;
-  margin-bottom: 20px;
+  font-size: 60px;
+  margin-bottom: 10px;
   font-style: bold;
+  font-family: "Lilita One", sans-serif;
 `;
 
 const Subtitle = styled.h2`
-  font-size: 20px;
+  font-size: 30px;
   font-style: bold;
   margin-bottom: 20px;
 `;
@@ -34,13 +35,14 @@ const Buttonwrapper = styled.div`
   display: flex;
   gap: 20px;
   button {
-    width: 200px;
-    height: 40px;
+    margin-top: 20px;
+    width: 400px;
+    height: 60px;
     background-color: rgb(255, 255, 255);
     color: black;
     border-radius: 10px;
     border: none;
-    font-size: 15px;
+    font-size: 18px;
     font-weight: bold;
     cursor: pointer;
     box-shadow: 0px 3px 5px rgb(0, 0, 0, 0.25);
@@ -61,11 +63,8 @@ const HomePage = () => {
         각 항생제의 예후를 비교하고, 근거 있는 선택을 시작하세요.
       </Subtitle>
       <Buttonwrapper>
-        <button onClick={() => navigate("/checkInfo")}>
-          기존 환자 불러오기
-        </button>
         <button onClick={() => navigate("/createNew/Info")}>
-          새 환자 등록하기
+          항생제 시뮬레이터 시작하기
         </button>
       </Buttonwrapper>
     </Wrapper>
